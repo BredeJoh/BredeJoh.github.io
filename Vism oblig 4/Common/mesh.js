@@ -36,7 +36,7 @@ Mesh.prototype.cubeMesh = function()
     this.cubeQuad(5, 4, 0, 1);
 }
 
-Mesh.prototype.cubeQuad(a, b, c, d)
+Mesh.prototype.cubeQuad = function(a, b, c, d)
 {
     var t1 = subtract(tempCubeVertices[b], tempCubeVertices[a]);
     var t2 = subtract(tempCubeVertices[c], tempCubeVertices[b]);
@@ -44,18 +44,18 @@ Mesh.prototype.cubeQuad(a, b, c, d)
     var tempNormal = vec3(tempNormal);
 
  
-    this.getVertices().push(tempCubeVertices[a]);
-    this.getNormals().push(tempNormal);
-    this.getVertices().push(tempCubeVertices[b]);
-    this.getNormals().push(tempNormal);
-    this.getVertices().push(tempCubeVertices[c]);
-    this.getNormals().push(tempNormal);
-    this.getVertices().push(tempCubeVertices[a]);
-    this.getNormals().push(tempNormal);
-    this.getVertices().push(tempCubeVertices[c]);
-    this.getNormals().push(tempNormal);
-    this.getVertices().push(tempCubeVertices[d]);
-    this.getNormals().push(tempNormal);
+    this.vertices.push(tempCubeVertices[a]);
+    this.normals.push(tempNormal);
+    this.vertices.push(tempCubeVertices[b]);
+    this.normals.push(tempNormal);
+    this.vertices.push(tempCubeVertices[c]);
+    this.normals.push(tempNormal);
+    this.vertices.push(tempCubeVertices[a]);
+    this.normals.push(tempNormal);
+    this.vertices.push(tempCubeVertices[c]);
+    this.normals.push(tempNormal);
+    this.vertices.push(tempCubeVertices[d]);
+    this.normals.push(tempNormal);
 }
 
 var tempCubeVertices = [

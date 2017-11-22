@@ -65,69 +65,8 @@ var thetaLoc;
 
 var flag = true;
 
-function quad(a, b, c, d) {
-
-    var t1 = subtract(vertices[b], vertices[a]);
-    var t2 = subtract(vertices[c], vertices[b]);
-    var normal = cross(t1, t2);
-    var normal = vec3(normal);
-
-    for (var i = 0; i < gameObjects.length - 1; i++)
-    {
-        var mesh = gameObjects[i].getMesh();
-
-        mesh.getVertices().push(vertices[a]);
-        mesh.getNormals().push(normal);
-        mesh.getVertices().push(vertices[b]);
-        mesh.getNormals().push(normal);
-        mesh.getVertices().push(vertices[c]);
-        mesh.getNormals().push(normal);
-        mesh.getVertices().push(vertices[a]);
-        mesh.getNormals().push(normal);
-        mesh.getVertices().push(vertices[c]);
-        mesh.getNormals().push(normal);
-        mesh.getVertices().push(vertices[d]);
-        mesh.getNormals().push(normal);
-
-        gameObjects[i].setMesh(mesh);
-    }
-    
-
-    var r1 = subtract(vertices2[b], vertices2[a]);
-    var r2 = subtract(vertices2[c], vertices2[b]);
-    var normal2 = cross(r1, r2);
-    var normal2 = vec3(normal2);
-     
-    var mesh2 = gameObjects[gameObjects.length - 1].getMesh();
-
-    mesh2.getVertices().push(vertices2[a]);
-    mesh2.getNormals().push(normal2);
-    mesh2.getVertices().push(vertices2[b]);
-    mesh2.getNormals().push(normal2);
-    mesh2.getVertices().push(vertices2[c]);
-    mesh2.getNormals().push(normal2);
-    mesh2.getVertices().push(vertices2[a]);
-    mesh2.getNormals().push(normal2);
-    mesh2.getVertices().push(vertices2[c]);
-    mesh2.getNormals().push(normal2);
-    mesh2.getVertices().push(vertices2[d]);
-    mesh2.getNormals().push(normal2);
-
-    gameObjects[gameObjects.length - 1].setMesh(mesh2);
-    
-}
-
-
 function initGeometry()
 {
-    //quad( 1, 0, 3, 2);
-    //quad( 2, 3, 7, 6);
-    //quad( 3, 0, 4, 7);
-    //quad( 6, 5, 1, 2);
-    //quad( 4, 5, 6, 7);
-    //quad(5, 4, 0, 1);
-
-    
     
     for (var i = 0; i < gameObjects.length; i++)
     {
@@ -155,8 +94,10 @@ window.onload = function init() {
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     
+    // initializes all geometry
     initGeometry();
 
+    //inits buffers for all objects
     for (var i = 0; i < gameObjects.length; i++)
         gameObjects[i].initBuffers();
 
