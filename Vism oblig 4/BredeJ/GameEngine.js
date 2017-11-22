@@ -65,14 +65,27 @@ var thetaLoc;
 
 var flag = true;
 
+var va = vec4(0.0, 0.0, -1.0, 1);
+var vb = vec4(0.0, 0.942809, 0.333333, 1);
+var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
+var vd = vec4(0.816497, -0.471405, 0.333333, 1);
+
+var numTimesToSubdivide = 3;
+
 function initGeometry()
 {
     
-    for (var i = 0; i < gameObjects.length; i++)
-    {
-        var tempMeshCube = new Mesh();
-        tempMeshCube.cubeMesh();
-        gameObjects[i].setMesh(tempMeshCube);
+    var tempMeshCube = new Mesh();
+    tempMeshCube.cubeMesh();
+
+    gameObjects[0].setMesh(tempMeshCube);
+
+    var tempMeshSphere = new Mesh();
+    tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, numTimesToSubdivide);
+
+    for (var i = 1; i < gameObjects.length; i++)
+    {     
+        gameObjects[i].setMesh(tempMeshSphere);
     }
 }
 
@@ -144,24 +157,6 @@ var render = function ()
     requestAnimFrame(render);
 }
 
-var initBuffers = function()
-{
-    var nBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, nBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(gameObjects[0].getNormals()), gl.STATIC_DRAW);
-
-    var vNormal = gl.getAttribLocation(program, "vNormal");
-    gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vNormal);
-
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(gameObjects[0].getVertices()), gl.STATIC_DRAW);
-
-    var vPosition = gl.getAttribLocation(program, "vPosition");
-    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vPosition);
-}
 
 function initButtonFunctions()
 {
