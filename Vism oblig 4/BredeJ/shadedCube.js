@@ -8,16 +8,13 @@ var numVertices  = 36;
 var pointsArray = [];
 var normalsArray = [];
 
-var cubeTransform = new Transform(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
-var cubeTransform2 = new Transform(vec3(3.0, 3.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
-
-var transforms =
+var gameObjects =
 [
-    new Transform(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new Transform(vec3(2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new Transform(vec3(-2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new Transform(vec3(-2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new Transform(vec3(2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))
+    new GameObject(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(-2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(-2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))
 ];
 
 var vertices = [
@@ -29,7 +26,18 @@ var vertices = [
         vec4( -0.5,  0.5, -0.5, 1.0 ),
         vec4( 0.5,  0.5, -0.5, 1.0 ),
         vec4( 0.5, -0.5, -0.5, 1.0 )
-    ];
+];
+
+var vertices2 = [
+        vec4(-0.75, -0.75, 0.75, 1.0),
+        vec4(-0.75, 0.75, 0.75, 1.0),
+        vec4(0.75, 0.75, 0.75, 1.0),
+        vec4(0.75, -0.75, 0.75, 1.0),
+        vec4(-0.75, -0.75, -0.75, 1.0),
+        vec4(-0.75, 0.75, -0.75, 1.0),
+        vec4(0.75, 0.75, -0.75, 1.0),
+        vec4(0.75, -0.75, -0.75, 1.0)
+];
 
 var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
 var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
@@ -59,35 +67,74 @@ var flag = true;
 
 function quad(a, b, c, d) {
 
-     var t1 = subtract(vertices[b], vertices[a]);
-     var t2 = subtract(vertices[c], vertices[b]);
-     var normal = cross(t1, t2);
-     var normal = vec3(normal);
+    var t1 = subtract(vertices[b], vertices[a]);
+    var t2 = subtract(vertices[c], vertices[b]);
+    var normal = cross(t1, t2);
+    var normal = vec3(normal);
 
+    for (var i = 0; i < gameObjects.length - 1; i++)
+    {
+        var mesh = gameObjects[i].getMesh();
 
-     pointsArray.push(vertices[a]); 
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[b]); 
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[c]); 
-     normalsArray.push(normal);   
-     pointsArray.push(vertices[a]);  
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[c]); 
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[d]); 
-     normalsArray.push(normal);    
+        mesh.getVertices().push(vertices[a]);
+        mesh.getNormals().push(normal);
+        mesh.getVertices().push(vertices[b]);
+        mesh.getNormals().push(normal);
+        mesh.getVertices().push(vertices[c]);
+        mesh.getNormals().push(normal);
+        mesh.getVertices().push(vertices[a]);
+        mesh.getNormals().push(normal);
+        mesh.getVertices().push(vertices[c]);
+        mesh.getNormals().push(normal);
+        mesh.getVertices().push(vertices[d]);
+        mesh.getNormals().push(normal);
+
+        gameObjects[i].setMesh(mesh);
+    }
+    
+
+    var r1 = subtract(vertices2[b], vertices2[a]);
+    var r2 = subtract(vertices2[c], vertices2[b]);
+    var normal2 = cross(r1, r2);
+    var normal2 = vec3(normal2);
+     
+    var mesh2 = gameObjects[gameObjects.length - 1].getMesh();
+
+    mesh2.getVertices().push(vertices2[a]);
+    mesh2.getNormals().push(normal2);
+    mesh2.getVertices().push(vertices2[b]);
+    mesh2.getNormals().push(normal2);
+    mesh2.getVertices().push(vertices2[c]);
+    mesh2.getNormals().push(normal2);
+    mesh2.getVertices().push(vertices2[a]);
+    mesh2.getNormals().push(normal2);
+    mesh2.getVertices().push(vertices2[c]);
+    mesh2.getNormals().push(normal2);
+    mesh2.getVertices().push(vertices2[d]);
+    mesh2.getNormals().push(normal2);
+
+    gameObjects[gameObjects.length - 1].setMesh(mesh2);
+    
 }
 
 
-function colorCube()
+function initGeometry()
 {
-    quad( 1, 0, 3, 2 );
-    quad( 2, 3, 7, 6 );
-    quad( 3, 0, 4, 7 );
-    quad( 6, 5, 1, 2 );
-    quad( 4, 5, 6, 7 );
-    quad( 5, 4, 0, 1 );
+    //quad( 1, 0, 3, 2);
+    //quad( 2, 3, 7, 6);
+    //quad( 3, 0, 4, 7);
+    //quad( 6, 5, 1, 2);
+    //quad( 4, 5, 6, 7);
+    //quad(5, 4, 0, 1);
+
+    
+    
+    for (var i = 0; i < gameObjects.length; i++)
+    {
+        var tempMeshCube = new Mesh();
+        tempMeshCube.cubeMesh();
+        gameObjects[i].setMesh(tempMeshCube);
+    }
 }
 
 
@@ -108,23 +155,10 @@ window.onload = function init() {
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     
-    colorCube();
+    initGeometry();
 
-    var nBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(normalsArray), gl.STATIC_DRAW );
-    
-    var vNormal = gl.getAttribLocation( program, "vNormal" );
-    gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vNormal );
-
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
-
-    var vPosition = gl.getAttribLocation(program, "vPosition");
-    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vPosition);
+    for (var i = 0; i < gameObjects.length; i++)
+        gameObjects[i].initBuffers();
 
     thetaLoc = gl.getUniformLocation(program, "theta"); 
     
@@ -153,7 +187,7 @@ window.onload = function init() {
     
     gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"),
        false, flatten(projection));
-    
+
     render();
 }
 
@@ -163,15 +197,29 @@ var render = function ()
             
     if (flag) theta[axis] += 2.0;
 
-    for(var i = 0; i < transforms.length; i++)
-        renderObject(transforms[i]);
+    for (var i = 0; i < gameObjects.length; i++)
+        renderObject(gameObjects[i]);
           
     requestAnimFrame(render);
 }
 
-function getModelView(_modelView)
+var initBuffers = function()
 {
-    modelView = cubeTransform.getMatrix();
+    var nBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, nBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(gameObjects[0].getNormals()), gl.STATIC_DRAW);
+
+    var vNormal = gl.getAttribLocation(program, "vNormal");
+    gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vNormal);
+
+    var vBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(gameObjects[0].getVertices()), gl.STATIC_DRAW);
+
+    var vPosition = gl.getAttribLocation(program, "vPosition");
+    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vPosition);
 }
 
 function initButtonFunctions()
@@ -179,50 +227,60 @@ function initButtonFunctions()
     //translate
     document.getElementById("Right").onclick = function ()
     {
-        cubeTransform.translate(vec3(0.5, 0, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+        gameObjects[i].getTransform().translate(vec3(0.5, 0, 0));
     };
 
     document.getElementById("Left").onclick = function () {
-        cubeTransform.translate(vec3(-0.5, 0, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(-0.5, 0, 0));
     };
 
     document.getElementById("Up").onclick = function () {
-        cubeTransform.translate(vec3(0, 0.5, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, 0.5, 0));
     };
     
     document.getElementById("Down").onclick = function () {
-        cubeTransform.translate(vec3(0, -0.5, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, -0.5, 0));
     };
     // not very usefull in ortho view, but it shows in the lighting
     document.getElementById("Forward").onclick = function () {
-        cubeTransform.translate(vec3(0, 0, 0.5));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, 0, 0.5));
     };
 
     document.getElementById("Back").onclick = function () {
-        cubeTransform.translate(vec3(0, 0, -0.5));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, 0, -0.5));
     };
 
     //Scale
     document.getElementById("ScaleUp").onclick = function () {
-        cubeTransform.scalar(vec3(0.1, 0.1, 0.1));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().scalar(vec3(0.1, 0.1, 0.1));
     };
 
     document.getElementById("ScaleDown").onclick = function () {
-        cubeTransform.scalar(vec3(-0.1, -0.1, -0.1));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().scalar(vec3(-0.1, -0.1, -0.1));
     };
 
     //rotation
     document.getElementById("ButtonX").onclick = function () {
         axis = xAxis;
-        cubeTransform.rotate(vec3(5.0, 0.0, 0.0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().rotate(vec3(5.0, 0.0, 0.0));
     };
     document.getElementById("ButtonY").onclick = function () {
         axis = yAxis;
-        cubeTransform.rotate(vec3(0.0, 5.0, 0.0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().rotate(vec3(0.0, 5.0, 0.0));
     };
     document.getElementById("ButtonZ").onclick = function () {
         axis = zAxis;
-        cubeTransform.rotate(vec3(0.0, 0.0, 5.0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().rotate(vec3(0.0, 0.0, 5.0));
     };
-    //document.getElementById("ButtonT").onclick = function () { flag = !flag; };
 }
