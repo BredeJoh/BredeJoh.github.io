@@ -50,7 +50,7 @@ void main()
     gl_Position = projectionMatrix * modelViewMatrix * vPosition;
     fColor = ambient + diffuse +specular;
     
-    fColor.a = 1.0;
+    fColor.a = 0.95;
 }
 </script>
 
@@ -65,6 +65,7 @@ void
 main()
 {
     gl_FragColor = fColor;
+
 }
 </script>
 

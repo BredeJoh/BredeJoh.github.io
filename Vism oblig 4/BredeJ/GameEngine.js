@@ -10,33 +10,11 @@ var normalsArray = [];
 
 var gameObjects =
 [
-    new GameObject(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new GameObject(vec3(2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new GameObject(vec3(-2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new GameObject(vec3(-2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new GameObject(vec3(2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))
-];
-
-var vertices = [
-        vec4( -0.5, -0.5,  0.5, 1.0 ),
-        vec4( -0.5,  0.5,  0.5, 1.0 ),
-        vec4( 0.5,  0.5,  0.5, 1.0 ),
-        vec4( 0.5, -0.5,  0.5, 1.0 ),
-        vec4( -0.5, -0.5, -0.5, 1.0 ),
-        vec4( -0.5,  0.5, -0.5, 1.0 ),
-        vec4( 0.5,  0.5, -0.5, 1.0 ),
-        vec4( 0.5, -0.5, -0.5, 1.0 )
-];
-
-var vertices2 = [
-        vec4(-0.75, -0.75, 0.75, 1.0),
-        vec4(-0.75, 0.75, 0.75, 1.0),
-        vec4(0.75, 0.75, 0.75, 1.0),
-        vec4(0.75, -0.75, 0.75, 1.0),
-        vec4(-0.75, -0.75, -0.75, 1.0),
-        vec4(-0.75, 0.75, -0.75, 1.0),
-        vec4(0.75, 0.75, -0.75, 1.0),
-        vec4(0.75, -0.75, -0.75, 1.0)
+    new GameObject(vec3(0.0, 3.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(0.0, 2.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(0.0, 1.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(0.0, 0.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))
 ];
 
 var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
@@ -68,17 +46,36 @@ var flag = true;
 function initGeometry()
 {
     
-    var tempMeshCube = new Mesh();
-    tempMeshCube.cubeMesh();
-
-    gameObjects[0].setMesh(tempMeshCube);
+   // var tempMeshCube = new Mesh();
+   // tempMeshCube.cubeMesh();
+   //
+   // gameObjects[0].setMesh(tempMeshCube);
 
     var tempMeshSphere = new Mesh();
-    tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, numTimesToSubdivide);
+    tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 0);
 
-    for (var i = 1; i < gameObjects.length; i++)
-    {     
+    for (var i = 0; i < gameObjects.length; i++)
+    {
+        gameObjects[i].getTransform().scalar(vec3(0.3 * i, 0.3 * i, 0.0));
+        gameObjects[i].getTransform().rotate(vec3(90, 0, 0));
         gameObjects[i].setMesh(tempMeshSphere);
+    }
+
+    var tempMeshSphere = new Mesh();
+    tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 3);
+
+    gameObjects.push(new GameObject(vec3(-0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    gameObjects.push(new GameObject(vec3(0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    gameObjects.push(new GameObject(vec3(-1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    gameObjects.push(new GameObject(vec3(1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    gameObjects.push(new GameObject(vec3(-1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    gameObjects.push(new GameObject(vec3(1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    gameObjects.push(new GameObject(vec3(-1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    gameObjects.push(new GameObject(vec3(1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+
+    for(var i = 0; i < 8; i++)
+    {
+        gameObjects[5 + i].setMesh(tempMeshSphere);
     }
 }
 
