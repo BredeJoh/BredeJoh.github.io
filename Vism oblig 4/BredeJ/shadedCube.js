@@ -8,8 +8,17 @@ var numVertices  = 36;
 var pointsArray = [];
 var normalsArray = [];
 
-var cubePosition = vec3(0.0, 0.0, 0.0);
-var cubeScale = vec3(1.0, 1.0, 1.0);
+var cubeTransform = new Transform(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+var cubeTransform2 = new Transform(vec3(3.0, 3.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+
+var transforms =
+[
+    new Transform(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new Transform(vec3(2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new Transform(vec3(-2.0, 2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new Transform(vec3(-2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new Transform(vec3(2.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))
+];
 
 var vertices = [
         vec4( -0.5, -0.5,  0.5, 1.0 ),
@@ -152,66 +161,68 @@ var render = function ()
 {        
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             
-    if(flag) theta[axis] += 2.0;
-            
-    getModelView();
-    
-    gl.uniformMatrix4fv( gl.getUniformLocation(program,
-            "modelViewMatrix"), false, flatten(modelView) );
+    if (flag) theta[axis] += 2.0;
 
-    gl.drawArrays(gl.TRIANGLES, 0, numVertices);
-                 
+    for(var i = 0; i < transforms.length; i++)
+        renderObject(transforms[i]);
+          
     requestAnimFrame(render);
 }
 
 function getModelView(_modelView)
 {
-    modelView = mat4();
-    modelView = translate(cubePosition);
-    modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0]));
-    modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0]));
-    modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1]));
-    modelView = mult(modelView, scalem(cubeScale));
+    modelView = cubeTransform.getMatrix();
 }
 
 function initButtonFunctions()
 {
+    //translate
     document.getElementById("Right").onclick = function ()
     {
-        cubePosition = add(vec3(0.5, 0, 0), cubePosition);
+        cubeTransform.translate(vec3(0.5, 0, 0));
     };
 
     document.getElementById("Left").onclick = function () {
-        cubePosition = add(vec3(-0.5, 0, 0), cubePosition);
+        cubeTransform.translate(vec3(-0.5, 0, 0));
     };
 
     document.getElementById("Up").onclick = function () {
-        cubePosition = add(vec3(0, 0.5, 0), cubePosition);
+        cubeTransform.translate(vec3(0, 0.5, 0));
     };
     
     document.getElementById("Down").onclick = function () {
-        cubePosition = add(vec3(0, -0.5, 0), cubePosition);
+        cubeTransform.translate(vec3(0, -0.5, 0));
     };
-
+    // not very usefull in ortho view, but it shows in the lighting
     document.getElementById("Forward").onclick = function () {
-        cubePosition = add(vec3(0, 0, 0.5), cubePosition);
+        cubeTransform.translate(vec3(0, 0, 0.5));
     };
 
     document.getElementById("Back").onclick = function () {
-        cubePosition = add(vec3(0, 0, -0.5), cubePosition);
+        cubeTransform.translate(vec3(0, 0, -0.5));
     };
 
+    //Scale
     document.getElementById("ScaleUp").onclick = function () {
-        cubeScale = add(vec3(0.1, 0.1, 0.1), cubeScale);
+        cubeTransform.scalar(vec3(0.1, 0.1, 0.1));
     };
 
     document.getElementById("ScaleDown").onclick = function () {
-        cubeScale = add(vec3(-0.1, -0.1, -0.1), cubeScale);
+        cubeTransform.scalar(vec3(-0.1, -0.1, -0.1));
     };
 
-
-    document.getElementById("ButtonX").onclick = function () { axis = xAxis; };
-    document.getElementById("ButtonY").onclick = function () { axis = yAxis; };
-    document.getElementById("ButtonZ").onclick = function () { axis = zAxis; };
-    document.getElementById("ButtonT").onclick = function () { flag = !flag; };
+    //rotation
+    document.getElementById("ButtonX").onclick = function () {
+        axis = xAxis;
+        cubeTransform.rotate(vec3(5.0, 0.0, 0.0));
+    };
+    document.getElementById("ButtonY").onclick = function () {
+        axis = yAxis;
+        cubeTransform.rotate(vec3(0.0, 5.0, 0.0));
+    };
+    document.getElementById("ButtonZ").onclick = function () {
+        axis = zAxis;
+        cubeTransform.rotate(vec3(0.0, 0.0, 5.0));
+    };
+    //document.getElementById("ButtonT").onclick = function () { flag = !flag; };
 }
