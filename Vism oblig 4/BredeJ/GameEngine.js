@@ -11,10 +11,10 @@ var normalsArray = [];
 var gameObjects =
 [
     new GameObject(vec3(0.0, 3.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
-    new GameObject(vec3(0.0, -0.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0)),
-    new GameObject(vec3(0.0, -1.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0)),
-    new GameObject(vec3(0.0, -2.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0)),
-    new GameObject(vec3(0.0, -3.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0))
+    new GameObject(vec3(0.0, 2.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(0.0, 1.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(0.0, 0.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
+    new GameObject(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))
 ];
 
 var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
@@ -56,9 +56,7 @@ function initGeometry()
 
     for (var i = 0; i < gameObjects.length; i++)
     {
-        if (i == 0) {
-            gameObjects[i].getTransform().rotate(vec3(90, 0, 0));
-        }
+        gameObjects[i].getTransform().rotate(vec3(90, 0, 0));
 
         gameObjects[i].getTransform().scalar(vec3(0.3 * i, 0.3 * i, 0.0));
         gameObjects[i].setMesh(tempMeshSphere);
@@ -81,8 +79,11 @@ function initGeometry()
         gameObjects[5 + i].setMesh(tempMeshSphere);
     }
 
-    for (var i = 1; i < gameObjects.length-8; i++)
-        gameObjects[i].getTransform().setParent(gameObjects[0].getTransform());
+    var tempMeshCube = new Mesh();
+    tempMeshCube.cubeMesh();
+
+    gameObjects.push(new GameObject(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.75, 3.0, 0.75)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
 }
 
 
@@ -159,60 +160,60 @@ function initButtonFunctions()
     //translate
     document.getElementById("Right").onclick = function ()
     {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().translate(vec3(0.5, 0, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0.5, 0, 0));
     };
 
     document.getElementById("Left").onclick = function () {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().translate(vec3(-0.5, 0, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(-0.5, 0, 0));
     };
 
     document.getElementById("Up").onclick = function () {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().translate(vec3(0, 0.5, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, 0.5, 0));
     };
     
     document.getElementById("Down").onclick = function () {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().translate(vec3(0, -0.5, 0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, -0.5, 0));
     };
     // not very usefull in ortho view, but it shows in the lighting
     document.getElementById("Forward").onclick = function () {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().translate(vec3(0, 0, 0.5));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, 0, 0.5));
     };
 
     document.getElementById("Back").onclick = function () {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().translate(vec3(0, 0, -0.5));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().translate(vec3(0, 0, -0.5));
     };
 
     //Scale
     document.getElementById("ScaleUp").onclick = function () {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().scalar(vec3(0.1, 0.1, 0.1));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().scalar(vec3(0.1, 0.1, 0.1));
     };
 
     document.getElementById("ScaleDown").onclick = function () {
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().scalar(vec3(-0.1, -0.1, -0.1));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().scalar(vec3(-0.1, -0.1, -0.1));
     };
 
     //rotation
     document.getElementById("ButtonX").onclick = function () {
         axis = xAxis;
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().rotate(vec3(5.0, 0.0, 0.0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().rotate(vec3(5.0, 0.0, 0.0));
     };
     document.getElementById("ButtonY").onclick = function () {
         axis = yAxis;
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().rotate(vec3(0.0, 5.0, 0.0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().rotate(vec3(0.0, 5.0, 0.0));
     };
     document.getElementById("ButtonZ").onclick = function () {
         axis = zAxis;
-        //for (var i = 0; i < gameObjects.length; i++)
-            gameObjects[0].getTransform().rotate(vec3(0.0, 0.0, 5.0));
+        for (var i = 0; i < gameObjects.length; i++)
+            gameObjects[i].getTransform().rotate(vec3(0.0, 0.0, 5.0));
     };
 }
