@@ -45,16 +45,11 @@ var flag = true;
 
 function initGeometry()
 {
-    
-   // var tempMeshCube = new Mesh();
-   // tempMeshCube.cubeMesh();
-   //
-   // gameObjects[0].setMesh(tempMeshCube);
-
+    // top part of tree (just a sphere with 0 recursions)
     var tempMeshSphere = new Mesh();
     tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 0);
 
-    for (var i = 0; i < gameObjects.length; i++)
+    for (var i = 0; i < 5; i++)
     {
         gameObjects[i].getTransform().rotate(vec3(90, 0, 0));
 
@@ -62,27 +57,36 @@ function initGeometry()
         gameObjects[i].setMesh(tempMeshSphere);
     }
 
-    var tempMeshSphere = new Mesh();
-    tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 3);
+    //for (var i = 5; i < 10; i++) {
+    //    gameObjects[i].getTransform().rotate(vec3(0, 180, 0));
+    //
+    //    gameObjects[i].getTransform().scalar(vec3(0.3 * (i-5), 0.3 * (i-5), 0.0));
+    //    gameObjects[i].setMesh(tempMeshSphere);
+    //}
 
-    gameObjects.push(new GameObject(vec3(-0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    gameObjects.push(new GameObject(vec3(0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    gameObjects.push(new GameObject(vec3(-1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    gameObjects.push(new GameObject(vec3(1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    gameObjects.push(new GameObject(vec3(-1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    gameObjects.push(new GameObject(vec3(1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    gameObjects.push(new GameObject(vec3(-1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    gameObjects.push(new GameObject(vec3(1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    // small spheres around tree, decorations
+    //var tempMeshSphere = new Mesh();
+    //tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 3);
+    //
+    //gameObjects.push(new GameObject(vec3(-0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //gameObjects.push(new GameObject(vec3(0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //gameObjects.push(new GameObject(vec3(-1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //gameObjects.push(new GameObject(vec3(1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //gameObjects.push(new GameObject(vec3(-1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //gameObjects.push(new GameObject(vec3(1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //gameObjects.push(new GameObject(vec3(-1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //gameObjects.push(new GameObject(vec3(1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
+    //
+    //for (var i = 5; i < gameObjects.length; i++)
+    //{
+    //    gameObjects[i].setMesh(tempMeshSphere);
+    //}
 
-    for(var i = 0; i < 8; i++)
-    {
-        gameObjects[5 + i].setMesh(tempMeshSphere);
-    }
-
+    //trunk
     var tempMeshCube = new Mesh();
     tempMeshCube.cubeMesh();
 
-    gameObjects.push(new GameObject(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.75, 3.0, 0.75)));
+    gameObjects.push(new GameObject(vec3(0.0, 0.0, 0.0), vec3(90.0, 0.0, 0.0), vec3(0.75, 0.75, 3.0)));
     gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
 }
 
@@ -94,7 +98,7 @@ window.onload = function init() {
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 0.3, 0.3, 0.3, 1.0 );
+    gl.clearColor( 0.55, 0.55, 0.55, 1.0 );
     
     gl.enable(gl.DEPTH_TEST);
 
@@ -147,11 +151,18 @@ var render = function ()
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             
     if (flag) theta[axis] += 2.0;
-
+    rotateZ();
     for (var i = 0; i < gameObjects.length; i++)
         renderObject(gameObjects[i]);
           
     requestAnimFrame(render);
+}
+
+function rotateZ() {
+
+    axis = zAxis;
+    for (var i = 0; i < gameObjects.length; i++)
+        gameObjects[i].getTransform().rotate(vec3(0.0, 0.0, 2.0));
 }
 
 
@@ -178,7 +189,7 @@ function initButtonFunctions()
         for (var i = 0; i < gameObjects.length; i++)
             gameObjects[i].getTransform().translate(vec3(0, -0.5, 0));
     };
-    // not very usefull in ortho view, but it shows in the lighting
+    
     document.getElementById("Forward").onclick = function () {
         for (var i = 0; i < gameObjects.length; i++)
             gameObjects[i].getTransform().translate(vec3(0, 0, 0.5));
