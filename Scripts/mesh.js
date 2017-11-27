@@ -1,4 +1,4 @@
-
+// simple mesh object for holding vertices and indices
 function Mesh() {
     this.vertices = [];
     this.normals = [];
@@ -8,21 +8,11 @@ Mesh.prototype.getVertices = function () {
     return this.vertices;
 }
 
-//Mesh.prototype.setVertices = function (_vertices) {
-//    for (var i = 0; i < _vertices.length; i++)
-//        this.vertices.push(_vertices[i]);
-//}
-
 Mesh.prototype.getNormals = function () {
     return this.normals;
 }
 
-//Mesh.prototype.setNormals = function (_normals) {
-//    for (var i = 0; i < _normals.length; i++)
-//        this.normals.push(_normals[i]);
-//}
-
-
+// function from angel 06 to create cube vertices
 Mesh.prototype.cubeMesh = function()
 {
     this.vertices = [];
@@ -36,6 +26,19 @@ Mesh.prototype.cubeMesh = function()
     this.cubeQuad(5, 4, 0, 1);
 }
 
+// standard values for creating cube
+var tempCubeVertices = [
+        vec4(-0.5, -0.5, 0.5, 1.0),
+        vec4(-0.5, 0.5, 0.5, 1.0),
+        vec4(0.5, 0.5, 0.5, 1.0),
+        vec4(0.5, -0.5, 0.5, 1.0),
+        vec4(-0.5, -0.5, -0.5, 1.0),
+        vec4(-0.5, 0.5, -0.5, 1.0),
+        vec4(0.5, 0.5, -0.5, 1.0),
+        vec4(0.5, -0.5, -0.5, 1.0)
+];
+
+// creates a single quad for cube
 Mesh.prototype.cubeQuad = function(a, b, c, d)
 {
     var t1 = subtract(tempCubeVertices[b], tempCubeVertices[a]);
@@ -58,6 +61,7 @@ Mesh.prototype.cubeQuad = function(a, b, c, d)
     this.normals.push(tempNormal);
 }
 
+// standard values for creating sphere
 var va = vec4(0.0, 0.0, -1.0, 1);
 var vb = vec4(0.0, 0.942809, 0.333333, 1);
 var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
@@ -65,6 +69,8 @@ var vd = vec4(0.816497, -0.471405, 0.333333, 1);
 
 var numTimesToSubdivide = 3;
 
+//also taken from angel 06 for creating spheres, no longer used in this project but works perfectly fine
+//very much like we made in earlier projects
 Mesh.prototype.divideSphereTriangle = function(a, b, c, count)
 {
     if (count > 0) {
@@ -105,14 +111,3 @@ Mesh.prototype.createSphereTriangle = function (a, b, c)
     this.normals.push(b[0], b[1], b[2], 0.0);
     this.normals.push(c[0], c[1], c[2], 0.0);
 }
-
-var tempCubeVertices = [
-        vec4(-0.5, -0.5, 0.5, 1.0),
-        vec4(-0.5, 0.5, 0.5, 1.0),
-        vec4(0.5, 0.5, 0.5, 1.0),
-        vec4(0.5, -0.5, 0.5, 1.0),
-        vec4(-0.5, -0.5, -0.5, 1.0),
-        vec4(-0.5, 0.5, -0.5, 1.0),
-        vec4(0.5, 0.5, -0.5, 1.0),
-        vec4(0.5, -0.5, -0.5, 1.0)
-];

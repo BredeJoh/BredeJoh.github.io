@@ -1,7 +1,8 @@
-
-
+// gameObject struckture for holding transform, mesh and color
+// very simple and basic
 function GameObject(position, rotation, scale)
 {
+    
     this.transform = new Transform(position, rotation, scale);
     this.mesh = new Mesh();
 
@@ -29,6 +30,7 @@ GameObject.prototype.setColor = function(color)
 
 GameObject.prototype.getColor = function () { return this.color;}
 
+// init buffers for object based om mesh, could also be in mesh
 GameObject.prototype.initBuffers = function()
 {
     var nBuffer = gl.createBuffer();

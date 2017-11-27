@@ -17,6 +17,10 @@ uniform float shininess;
 uniform vec4 colorIN;
 void main()
 {
+
+    // most of this is as it came with angel 06
+    // added separate view and modelMatrix for perspective view
+    // added color with lighting
     
     vec3 pos = -(modelMatrix * vPosition).xyz;
     
@@ -49,6 +53,8 @@ void main()
     } 
 
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vPosition.xyz, 1.0);
+
+    // combine all lighting variables and add color
     fColor = (ambient + diffuse + specular) * colorIN;
     
     fColor.a = 0.95;
@@ -73,12 +79,11 @@ main()
 <script type="text/javascript" src="./Common/webgl-utils.js"></script>
 <script type="text/javascript" src="./Common/initShaders.js"></script>
 <script type="text/javascript" src="./Common/MV.js"></script>
-<script type="text/javascript" src="./Common/transform.js"></script>
-<script type="text/javascript" src="./Common/renderer.js"></script>
-<script type="text/javascript" src="./Common/gameobject.js"></script>
-<script type="text/javascript" src="./Common/mesh.js"></script>
-<script type="text/javascript" src="./Common/GameEngine.js"></script>
-<script type="text/javascript" src="./Common/camera.js"></script>
+<script type="text/javascript" src="./Scripts/transform.js"></script>
+<script type="text/javascript" src="./Scripts/gameobject.js"></script>
+<script type="text/javascript" src="./Scripts/mesh.js"></script>
+<script type="text/javascript" src="./Scripts/GameEngine.js"></script>
+<script type="text/javascript" src="./Scripts/camera.js"></script>
 
 <body>
 <canvas id="gl-canvas" width="720" height="720">
