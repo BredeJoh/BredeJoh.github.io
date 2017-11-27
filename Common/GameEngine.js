@@ -1,4 +1,4 @@
-
+// alt er laget fra grunnen av basert på angel kap 06: rotatingCube
 
 var canvas;
 var gl;
@@ -19,7 +19,9 @@ var gameObjects =
     new GameObject(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))
 ];
 
-var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
+var particles = [];
+
+var lightPosition = vec4(1.0, 4.0, 0.0, 0.0 );
 var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
 var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
 var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
@@ -61,32 +63,8 @@ function initGeometry()
 
         gameObjects[i].getTransform().scalar(vec3(0.3 * i, 0.3 * i, 0.0));
         gameObjects[i].setMesh(tempMeshSphere);
+        gameObjects[i].setColor(vec4(0, 1, 1, 1));
     }
-
-    //for (var i = 5; i < 10; i++) {
-    //    gameObjects[i].getTransform().rotate(vec3(0, 180, 0));
-    //
-    //    gameObjects[i].getTransform().scalar(vec3(0.3 * (i-5), 0.3 * (i-5), 0.0));
-    //    gameObjects[i].setMesh(tempMeshSphere);
-    //}
-
-    // small spheres around tree, decorations
-    //var tempMeshSphere = new Mesh();
-    //tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 3);
-    //
-    //gameObjects.push(new GameObject(vec3(-0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //gameObjects.push(new GameObject(vec3(0.9, 2.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //gameObjects.push(new GameObject(vec3(-1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //gameObjects.push(new GameObject(vec3(1.1, 1.75, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //gameObjects.push(new GameObject(vec3(-1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //gameObjects.push(new GameObject(vec3(1.3, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //gameObjects.push(new GameObject(vec3(-1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //gameObjects.push(new GameObject(vec3(1.5, 0.25, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.175, 0.175, 0.175)));
-    //
-    //for (var i = 5; i < gameObjects.length; i++)
-    //{
-    //    gameObjects[i].setMesh(tempMeshSphere);
-    //}
 
     //trunk
     var tempMeshCube = new Mesh();
@@ -94,6 +72,20 @@ function initGeometry()
 
     gameObjects.push(new GameObject(vec3(0.0, 0.0, 0.0), vec3(90.0, 0.0, 0.0), vec3(0.75, 0.75, 3.0)));
     gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
+
+    //platform under trunk
+
+    gameObjects.push(new GameObject(vec3(0.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(10.0, 0.5, 10.0)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
+
+    for (var i = 0; i < 250; i++)
+    {
+        var x = Math.floor(Math.random() * 30 - 15);
+        var y = Math.floor(Math.random() * 10);
+        var z = Math.floor(Math.random() * 30 - 15);
+        particles.push(new GameObject(vec3(x, y, z), vec3(0, 0, 0), vec3(0.05, 0.05, 0.05)));
+        particles[i].setMesh(tempMeshCube);
+    }
 }
 
 
@@ -163,7 +155,6 @@ window.onload = function init() {
     gl.uniform4fv(gl.getUniformLocation(program, "colorIN"), colorIN);
 
 
-
     var deltaXgravity = 1;
     var deltaYgravity = 0;
     var zoomGravity = 0;
@@ -217,6 +208,15 @@ window.onload = function init() {
 
         for (var i = 0; i < gameObjects.length; i++)
             renderObject(gameObjects[i]);
+
+        for (var i = 0; i < particles.length; i++)
+        {
+            var pos = particles[i].transform.position;
+            particles[i].transform.translate(vec3(0, -0.05, 0));
+            if (pos[1] < 0)
+                particles[i].transform.position[1] = Math.random() * 2 + 10;
+            renderObject(particles[i]);
+        }
 
         requestAnimFrame(render);
     }

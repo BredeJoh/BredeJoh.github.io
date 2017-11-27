@@ -4,6 +4,8 @@ function GameObject(position, rotation, scale)
 {
     this.transform = new Transform(position, rotation, scale);
     this.mesh = new Mesh();
+
+    this.color = vec4(1, 1, 1, 1);
 }
 
 GameObject.prototype.getTransform = function()
@@ -20,6 +22,12 @@ GameObject.prototype.setMesh = function(_mesh)
     this.mesh = _mesh;
 }
 
+GameObject.prototype.setColor = function(color)
+{
+    this.color = color;
+}
+
+GameObject.prototype.getColor = function () { return this.color;}
 
 GameObject.prototype.initBuffers = function()
 {
