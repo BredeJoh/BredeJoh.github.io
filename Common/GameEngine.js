@@ -8,6 +8,8 @@ var gl;
 //var pointsArray = [];
 //var normalsArray = [];
 
+var camera;
+
 var gameObjects =
 [
     new GameObject(vec3(0.0, 3.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)),
@@ -40,6 +42,10 @@ var axis = 0;
 var theta =[0, 0, 0];
 
 var thetaLoc;
+
+var lastMouseX = 0;
+var lastMouseY = 0;
+var mouseDown = false;
 
 var flag = true;
 
@@ -117,16 +123,17 @@ window.onload = function init() {
 
     thetaLoc = gl.getUniformLocation(program, "theta");
 
-    viewerPos = vec3(0.0, 0.0, -20.0);
+    viewerPos = [0.0, 10.0, 20.0];
 
     //projection = ortho(-5, 5, -5, 5, -100, 100);
-    projection = perspective(60, gl.canvas.width / gl.canvas.height, 0.1, 1000);
-    console.log(gl.canvas.width);
-    console.log(gl.canvas.height);
-    console.log(flatten(projection));
+    //projection = perspective(60, gl.canvas.width / gl.canvas.height, 0.1, 1000);
 
-    viewMatrix = mat4();
-    viewMatrix = lookAt([viewerPos[0], viewerPos[1], viewerPos[2]], [0, 0, 0], [0, 1, 0] );
+    camera = new Camera([viewerPos[0], viewerPos[1], viewerPos[2]], 60, gl.canvas.width / gl.canvas.height, 0.1, 1000);
+    projection = camera.getProjectionMatrix();
+    viewMatrix = camera.getViewMatrix();
+
+    //viewMatrix = mat4();
+    //viewMatrix = lookAt([viewerPos[0], viewerPos[1], viewerPos[2]], [0, 0, 0], [0, 1, 0] );
     
     ambientProduct = mult(lightAmbient, materialAmbient);
     diffuseProduct = mult(lightDiffuse, materialDiffuse);
@@ -155,20 +162,68 @@ window.onload = function init() {
 
     gl.uniform4fv(gl.getUniformLocation(program, "colorIN"), colorIN);
 
-    render();
+
+
+    var deltaXgravity = 1;
+    var deltaYgravity = 0;
+    var zoomGravity = 0;
+
+    canvas.onmousedown = function (ev)
+    {
+        mouseDown = true;
+        lastMouseX = ev.x;
+        lastMouseY = ev.y;
+    }
+    canvas.onmousemove = function (ev)
+    {
+        if (!mouseDown)
+            return;
+        var deltaX = ev.x - lastMouseX;
+        var deltaY = ev.y - lastMouseY;
+        deltaXgravity = deltaX;
+        deltaYgravity = deltaY;
+
+        lastMouseX = ev.x;
+        lastMouseY = ev.y
+    }
+
+    canvas.onmouseup = function (ev) { mouseDown = false; }
+
+    canvas.onmousewheel = function (ev)
+    {
+        zoomGravity = ev.wheelDelta / 250;
+    }
+
+
+
+    var render = function () {
+
+        deltaXgravity *= 0.90;
+        deltaYgravity *= 0.90;
+        zoomGravity *= 0.85;
+
+        //console.log(deltaXgravity);
+
+        camera.rotateAroundLookposition(deltaXgravity, deltaYgravity);
+        camera.adjustDistance(zoomGravity);
+        camera.updatePosition();
+
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, "viewMatrix"), false, flatten(camera.getViewMatrix()));
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"), false, flatten(camera.getProjectionMatrix()));
+
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        //rotateZ();
+
+        for (var i = 0; i < gameObjects.length; i++)
+            renderObject(gameObjects[i]);
+
+        requestAnimFrame(render);
+    }
+    requestAnimationFrame(render);
 }
 
-var render = function ()
-{        
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            
-    if (flag) theta[axis] += 2.0;
-    rotateZ();
-    for (var i = 0; i < gameObjects.length; i++)
-        renderObject(gameObjects[i]);
-          
-    requestAnimFrame(render);
-}
+
 
 function rotateZ() {
 
