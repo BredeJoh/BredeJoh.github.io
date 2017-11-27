@@ -9,15 +9,16 @@ attribute  vec3 vNormal;
 varying vec4 fColor;
 
 uniform vec4 ambientProduct, diffuseProduct, specularProduct;
-uniform mat4 modelViewMatrix;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform vec4 lightPosition;
 uniform float shininess;
+uniform vec4 colorIN;
 void main()
 {
-
     
-    vec3 pos = -(modelViewMatrix * vPosition).xyz;
+    vec3 pos = -(modelMatrix * vPosition).xyz;
     
     //fixed light postion
     
@@ -32,7 +33,7 @@ void main()
 
     // Transform vertex normal into eye coordinates
        
-    vec3 N = normalize( (modelViewMatrix*NN).xyz);
+    vec3 N = normalize( (modelMatrix*NN).xyz);
 
     // Compute terms in the illumination equation
     vec4 ambient = ambientProduct;
@@ -47,8 +48,8 @@ void main()
 	specular = vec4(0.0, 0.0, 0.0, 1.0);
     } 
 
-    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
-    fColor = ambient + diffuse +specular;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vPosition.xyz, 1.0);
+    fColor = (ambient + diffuse + specular) * colorIN;
     
     fColor.a = 0.95;
 }

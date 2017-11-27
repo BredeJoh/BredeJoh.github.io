@@ -3,8 +3,6 @@
 function GameObject(position, rotation, scale)
 {
     this.transform = new Transform(position, rotation, scale);
-    this.vertices = [];
-    this.normals = [];
     this.mesh = new Mesh();
 }
 

@@ -3,10 +3,10 @@
 var canvas;
 var gl;
 
-var numVertices  = 36;
+//var numVertices  = 36;
 
-var pointsArray = [];
-var normalsArray = [];
+//var pointsArray = [];
+//var normalsArray = [];
 
 var gameObjects =
 [
@@ -29,7 +29,7 @@ var materialShininess = 100.0;
 
 var ctm;
 var ambientColor, diffuseColor, specularColor;
-var modelView, projection;
+var projection;
 var viewerPos;
 var program;
 
@@ -92,22 +92,22 @@ function initGeometry()
 
 
 window.onload = function init() {
-    canvas = document.getElementById( "gl-canvas" );
-    
-    gl = WebGLUtils.setupWebGL( canvas );
-    if ( !gl ) { alert( "WebGL isn't available" ); }
+    canvas = document.getElementById("gl-canvas");
 
-    gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 0.55, 0.55, 0.55, 1.0 );
-    
+    gl = WebGLUtils.setupWebGL(canvas);
+    if (!gl) { alert("WebGL isn't available"); }
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0.55, 0.55, 0.55, 1.0);
+
     gl.enable(gl.DEPTH_TEST);
 
     //
     //  Load shaders and initialize attribute buffers
     //
-    program = initShaders( gl, "vertex-shader", "fragment-shader" );
-    gl.useProgram( program );
-    
+    program = initShaders(gl, "vertex-shader", "fragment-shader");
+    gl.useProgram(program);
+
     // initializes all geometry
     initGeometry();
 
@@ -115,12 +115,18 @@ window.onload = function init() {
     for (var i = 0; i < gameObjects.length; i++)
         gameObjects[i].initBuffers();
 
-    thetaLoc = gl.getUniformLocation(program, "theta"); 
-    
-    viewerPos = vec3(0.0, 0.0, -20.0 );
+    thetaLoc = gl.getUniformLocation(program, "theta");
 
-    projection = ortho(-5, 5, -5, 5, -100, 100);
-    //projection = perspective(45, 10, 0, 100);
+    viewerPos = vec3(0.0, 0.0, -20.0);
+
+    //projection = ortho(-5, 5, -5, 5, -100, 100);
+    projection = perspective(60, gl.canvas.width / gl.canvas.height, 0.1, 1000);
+    console.log(gl.canvas.width);
+    console.log(gl.canvas.height);
+    console.log(flatten(projection));
+
+    viewMatrix = mat4();
+    viewMatrix = lookAt([viewerPos[0], viewerPos[1], viewerPos[2]], [0, 0, 0], [0, 1, 0] );
     
     ambientProduct = mult(lightAmbient, materialAmbient);
     diffuseProduct = mult(lightDiffuse, materialDiffuse);
@@ -141,7 +147,13 @@ window.onload = function init() {
        "shininess"),materialShininess);
     
     gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"),
-       false, flatten(projection));
+        false, flatten(projection));
+
+    gl.uniformMatrix4fv(gl.getUniformLocation(program, "viewMatrix"), false, flatten(viewMatrix));
+
+    var colorIN = vec4(0, 1, 1, 1);
+
+    gl.uniform4fv(gl.getUniformLocation(program, "colorIN"), colorIN);
 
     render();
 }

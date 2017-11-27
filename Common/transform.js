@@ -1,4 +1,7 @@
 // fra Andreas Horvik 
+// har prøvd endret det til håndtere parent-child forhold, men forholdet mellom rotasjon og scalering ble for mye 
+// å legge til for å rotere rundt parent objektene, lignende med skalering.
+// det som er kommentert ut, håndterer posisjon i local og world space korrekt.
 
 function Transform(position, rotation, scale)
 {

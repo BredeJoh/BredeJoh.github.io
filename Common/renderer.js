@@ -2,10 +2,10 @@ var renderObject = function (gameObject)
 {
     gameObject.initBuffers();
 
-    var modelView = gameObject.getTransform().getMatrix();
+    var modelMatrix = gameObject.getTransform().getMatrix();
 
     gl.uniformMatrix4fv(gl.getUniformLocation(program,
-    "modelViewMatrix"), false, flatten(modelView));
+        "modelMatrix"), false, flatten(modelMatrix));
 
     gl.drawArrays(gl.TRIANGLES, 0, gameObject.getMesh().getVertices().length);
 }
