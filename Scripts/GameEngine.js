@@ -1,5 +1,5 @@
 // alt er laget fra grunnen av basert på angel kap 06: rotatingCube
-
+//
 var canvas;
 var gl;
 
