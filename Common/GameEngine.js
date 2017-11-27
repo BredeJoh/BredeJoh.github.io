@@ -49,28 +49,36 @@ var mouseDown = false;
 function initGeometry()
 {
     // top part of tree (just a sphere with 0 recursions)
-    var tempMeshSphere = new Mesh();
-    tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 0);
+    //var tempMeshSphere = new Mesh();
+    //tempMeshSphere.sphereTetrahedron(va, vb, vc, vd, 0);
+    //
+    //for (var i = 0; i < 5; i++)
+    //{
+    //    //rotate and scale objects for a proper shape
+    //    gameObjects[i].getTransform().rotate(vec3(90, 0, 0));
+    //    gameObjects[i].getTransform().scalar(vec3(0.3 * i, 0.3 * i, 0.0));
+    //    gameObjects[i].setMesh(tempMeshSphere);
+    //    gameObjects[i].setColor(vec4(0, 1, 1, 1)); //green color
+    //}
+    //
+    ////trunk
+    //var tempMeshCube = new Mesh();
+    //tempMeshCube.cubeMesh();
+    //
+    //gameObjects.push(new GameObject(vec3(0.0, 0.0, 0.0), vec3(90.0, 0.0, 0.0), vec3(0.75, 0.75, 3.0)));
+    //gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
+    //
+    ////platform under trunk
+    //gameObjects.push(new GameObject(vec3(0.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(10.0, 0.5, 10.0)));
+    //gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
 
-    for (var i = 0; i < 5; i++)
-    {
-        //rotate and scale objects for a proper shape
-        gameObjects[i].getTransform().rotate(vec3(90, 0, 0));
-        gameObjects[i].getTransform().scalar(vec3(0.3 * i, 0.3 * i, 0.0));
-        gameObjects[i].setMesh(tempMeshSphere);
-        gameObjects[i].setColor(vec4(0, 1, 1, 1)); //green color
-    }
+    // spheres for the tree
+    var tempMeshSphere2 = new Mesh();
+    tempMeshSphere2.sphereTetrahedron(va, vb, vc, vd, 3);
 
-    //trunk
-    var tempMeshCube = new Mesh();
-    tempMeshCube.cubeMesh();
-
-    gameObjects.push(new GameObject(vec3(0.0, 0.0, 0.0), vec3(90.0, 0.0, 0.0), vec3(0.75, 0.75, 3.0)));
-    gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
-
-    //platform under trunk
-    gameObjects.push(new GameObject(vec3(0.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(10.0, 0.5, 10.0)));
-    gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
+    gameObjects.push(new GameObject(vec3(3.0, 3.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0)))
+    gameObjects[gameObjects.length - 1].setColor(vec4(1, 0, 0, 1));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshSphere2);
 
     // particles
     for (var i = 0; i < 150; i++)

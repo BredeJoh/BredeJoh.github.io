@@ -72,6 +72,34 @@ function initGeometry()
     gameObjects.push(new GameObject(vec3(0.0, -2.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(10.0, 0.5, 10.0)));
     gameObjects[gameObjects.length - 1].setMesh(tempMeshCube);
 
+    // decoration spheres
+    var tempMeshSphere2 = new Mesh();
+    tempMeshSphere2.sphereTetrahedron(va, vb, vc, vd, 3);
+
+    gameObjects.push(new GameObject(vec3(0.85, 2.6, -0.4), vec3(0.0, 0.0, 0.0), vec3(0.2, 0.2, 0.2)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshSphere2);
+    gameObjects[gameObjects.length - 1].setColor(vec4(1, 0, 0, 1));
+
+    gameObjects.push(new GameObject(vec3(1.3, 1.0, -0.7), vec3(0.0, 0.0, 0.0), vec3(0.2, 0.2, 0.2)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshSphere2);
+    gameObjects[gameObjects.length - 1].setColor(vec4(0.0, 0.5, 2, 1));
+
+    gameObjects.push(new GameObject(vec3(-0.85, 2.6, -0.4), vec3(0.0, 0.0, 0.0), vec3(0.2, 0.2, 0.2)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshSphere2);
+    gameObjects[gameObjects.length - 1].setColor(vec4(1, 1, 0, 1));
+
+    gameObjects.push(new GameObject(vec3(-1.3, 1.0, -0.7), vec3(0.0, 0.0, 0.0), vec3(0.2, 0.2, 0.2)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshSphere2);
+    gameObjects[gameObjects.length - 1].setColor(vec4(0.5, 1.0, 0.5, 1));
+
+    gameObjects.push(new GameObject(vec3(0.0, 1.8, 1.2), vec3(0.0, 0.0, 0.0), vec3(0.2, 0.2, 0.2)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshSphere2);
+    gameObjects[gameObjects.length - 1].setColor(vec4(0.5, 2.0, 0.5, 1));
+
+    gameObjects.push(new GameObject(vec3(0.0, 0.25, 1.75), vec3(0.0, 0.0, 0.0), vec3(0.2, 0.2, 0.2)));
+    gameObjects[gameObjects.length - 1].setMesh(tempMeshSphere2);
+    gameObjects[gameObjects.length - 1].setColor(vec4(0.75, 0.25, 0.75, 1));
+
     // particles
     for (var i = 0; i < 150; i++)
     {
@@ -203,10 +231,10 @@ window.onload = function init() {
         {
             var pos = particles[i].transform.position;
             particles[i].transform.translate(vec3(0, -0.05, 0));
-
+        
             if (pos[1] < 0)
                 particles[i].transform.position[1] = Math.random() * 2 + 10;
-
+        
             renderObject(particles[i]);
         }
 
