@@ -3,18 +3,93 @@
 
 
 
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute  vec4 vPosition;
+attribute  vec3 vNormal;
+varying vec4 fColor;
 
-<!-- <script type="text/javascript" src="./Common/webgl-utils.js"></script>
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform float shininess;
+uniform vec4 colorIN;
+void main()
+{
+
+    // most of this is as it came with angel 06
+    // added separate view and modelMatrix for perspective view
+    // added color with lighting
+    
+    vec3 pos = -(modelMatrix * vPosition).xyz;
+    
+    //fixed light postion
+    
+    vec3 light = lightPosition.xyz;
+    vec3 L = normalize( light - pos );
+
+	
+    vec3 E = normalize( -pos );
+    vec3 H = normalize( L + E );
+    
+    vec4 NN = vec4(vNormal,0);
+
+    // Transform vertex normal into eye coordinates
+       
+    vec3 N = normalize( (modelMatrix*NN).xyz);
+
+    // Compute terms in the illumination equation
+    vec4 ambient = ambientProduct;
+
+    float Kd = max( dot(L, N), 0.0 );
+    vec4  diffuse = Kd*diffuseProduct;
+
+    float Ks = pow( max(dot(N, H), 0.0), shininess );
+    vec4  specular = Ks * specularProduct;
+    
+    if( dot(L, N) < 0.0 ) {
+	specular = vec4(0.0, 0.0, 0.0, 1.0);
+    } 
+
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vPosition.xyz, 1.0);
+
+    // combine all lighting variables and add color
+    fColor = (ambient + diffuse + specular) * colorIN;
+    
+    fColor.a = 0.95;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+
+}
+</script>
+
+<script type="text/javascript" src="./Common/webgl-utils.js"></script>
 <script type="text/javascript" src="./Common/initShaders.js"></script>
 <script type="text/javascript" src="./Common/MV.js"></script>
 <script type="text/javascript" src="./Scripts/transform.js"></script>
 <script type="text/javascript" src="./Scripts/gameobject.js"></script>
 <script type="text/javascript" src="./Scripts/mesh.js"></script>
 <script type="text/javascript" src="./Scripts/GameEngine.js"></script>
-<script type="text/javascript" src="./Scripts/camera.js"></script> -->
+<script type="text/javascript" src="./Scripts/camera.js"></script>
 
 <body>
-    <h1>For testing only</h1>
+<canvas id="gl-canvas" width="720" height="720">
+    Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+  
     <p> 
         <button id ="Right">Right</button>
         <button id ="Left">Left</button>
